@@ -115,3 +115,16 @@ Homework 5: Campus Customs Multi-Agent Operations. This file logs what I typed t
 **Follow-up prompt:** None needed yet.
 
 **Build notes:** Every claim in the reflection comes from the Problem 9 run data (`resolved_tickets.json`, `audit_trail.json`, the Actual and Cash tabs). Examples: 13 delegations against the 8 planned; 59 model calls and about 142k tokens; the 102 lease read four times, with one loop stopped by the guardrail; 103 never asking Accounting directly, which is why no bulk price was proposed; and $3,400 → $160 with only human approvals moving money.
+
+## Problem 11: Submit to Git
+
+**Prompt I typed:** "11. Submit to git. Push the code to a public git, so graders can clone it. We will submit the repo URL to Canvas and put it in output/github_url.txt. Do NOT push the real .env to the git. DO, though, include both DB files under data/ (the original and the working copy) so graders can easily run the app. The README should explain that you can copy the original DB to the working copy when you need a clean run, start the MCP server, start the FastAPI backend, start the React board, and reset the DB before a full three-ticket run." (I also pasted the expected file layout.)
+
+**Follow-up prompt:** None needed yet.
+
+**Build notes:**
+- **Repo:** https://github.com/nsteinyale/mgt409-hw5 (public). It follows my HW4 repo's pattern, with everything inside `hw5/` in the expected layout.
+- **Secrets:** a scan before committing found no key in any file. The real `.env` is git-ignored, and `.env.example` ships with an empty `PORTKEY_API_KEY=`.
+- **Data:** both databases are included (the original at $3,400 with 3 open tickets, the working copy at $160 with all 3 resolved).
+- **Portability:** the backend and `.mcp.json` no longer point at paths on my laptop, and a single top-level `requirements.txt` installs everything.
+- **Verified:** I made a fresh public clone, installed it from scratch, and checked that every file is there and the app starts.
