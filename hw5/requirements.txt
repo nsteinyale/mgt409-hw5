@@ -1,0 +1,10 @@
+# One environment for the MCP server, the agent team and the FastAPI backend.
+#   python -m venv .venv
+#   .venv\Scripts\activate        (macOS/Linux: source .venv/bin/activate)
+#   pip install -r requirements.txt
+fastmcp>=2.0.0
+pydantic-ai-slim[openai,mcp]>=1.0.0
+openai>=1.40.0
+python-dotenv>=1.0.1
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0

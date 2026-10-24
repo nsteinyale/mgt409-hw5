@@ -1,0 +1,205 @@
+import { useCallback, useEffect, useState } from 'react'
+import './intro.css'
+import { Portal, Triforce } from './Art'
+import { play, playIntro } from '../sfx'
+
+/* A video-game style intro, drawn and animated in code (SVG + CSS keyframes, no video file).
+   Title screen "PRESS START"  →  dawn in the woods, the Hero asleep  →  "!" he wakes  →
+   walks to the pedestal  →  pulls the sword from the stone  →  the camera dives into the blade  →
+   white flash  →  the Twilight Desk starts up.   Original artwork, inspired by a twilight adventure. */
+
+const LENGTH_MS = 11000
+
+export function Intro({ onDone }: { onDone: () => void }) {
+  const [phase, setPhase] = useState<'title' | 'play' | 'out'>('title')
+
+  const finish = useCallback(() => {
+    setPhase('out')
+    window.setTimeout(onDone, 450)
+  }, [onDone])
+
+  const start = useCallback(() => {
+    if (phase !== 'title') return
+    play('tick') // the click unlocks audio
+    playIntro()
+    setPhase('play')
+  }, [phase])
+
+  useEffect(() => {
+    if (phase !== 'play') return
+    if (new URLSearchParams(location.search).has('introhold')) return // testing: hold on the last frame
+    const t = window.setTimeout(finish, LENGTH_MS)
+    return () => window.clearTimeout(t)
+  }, [phase, finish])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') finish()
+      else if (phase === 'title') start()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [phase, start, finish])
+
+  return (
+    <div className={`intro ${phase}`} onClick={phase === 'title' ? start : undefined}>
+      <button className="intro-skip" onClick={(e) => { e.stopPropagation(); finish() }}>
+        Skip intro ▸▸
+      </button>
+
+      {phase === 'title' && (
+        <div className="title-screen">
+          <div className="title-portal"><Portal size={260} className="spin slow" /></div>
+          <Triforce size={70} className="title-tri" />
+          <h1>CAMPUS CUSTOMS</h1>
+          <h2>~ Twilight Desk ~</h2>
+          <p className="press">— PRESS START —</p>
+          <p className="hint">click anywhere or press any key · Esc skips</p>
+        </div>
+      )}
+
+      {phase !== 'title' && (
+        <>
+          <svg className="scene" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet" aria-hidden>
+            <defs>
+              <linearGradient id="dawn" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#2b3a6b" />
+                <stop offset=".45" stopColor="#c86a4a" />
+                <stop offset=".75" stopColor="#f5b46a" />
+                <stop offset="1" stopColor="#ffe2a8" />
+              </linearGradient>
+              <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#03080a" />
+                <stop offset=".7" stopColor="#0c2a2a" />
+                <stop offset="1" stopColor="#123a35" />
+              </linearGradient>
+              <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stopColor="#fff6d0" />
+                <stop offset=".5" stopColor="#ffd27a" />
+                <stop offset="1" stopColor="#ffb04a" stopOpacity="0" />
+              </radialGradient>
+              <radialGradient id="holy" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stopColor="#ffffff" stopOpacity=".95" />
+                <stop offset=".4" stopColor="#fff2b0" stopOpacity=".6" />
+                <stop offset="1" stopColor="#fff2b0" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="bladeG" x1="0" x2="1">
+                <stop offset="0" stopColor="#cfdde6" />
+                <stop offset=".5" stopColor="#ffffff" />
+                <stop offset="1" stopColor="#8fa6b4" />
+              </linearGradient>
+            </defs>
+
+            {/* the camera: everything inside zooms into the blade at the end */}
+            <g className="camera">
+              <rect width="1600" height="900" fill="url(#dawn)" />
+              <rect className="night" width="1600" height="900" fill="url(#night)" />
+              <g className="stars">
+                {Array.from({ length: 40 }, (_, i) => (
+                  <circle key={i} cx={(i * 397) % 1600} cy={(i * 131) % 420} r={(i % 3) + 0.8} fill="#e8fffb" />
+                ))}
+              </g>
+              <circle className="sun" cx="1180" cy="600" r="170" fill="url(#sun)" />
+
+              {/* far hills and forest */}
+              <path d="M0 560 Q 220 470 420 540 T 820 520 T 1220 530 T 1600 500 V 900 H 0 Z" fill="#2f4a3a" opacity=".8" />
+              <g className="trees" fill="#16291f">
+                <path d="M60 720 L130 360 L200 720 Z M150 720 L230 300 L310 720 Z" />
+                <path d="M1320 720 L1400 330 L1480 720 Z M1430 720 L1510 380 L1590 720 Z M1240 720 L1300 430 L1360 720 Z" />
+                <rect x="250" y="420" width="34" height="300" fill="#2a1d14" />
+                <ellipse cx="267" cy="400" rx="140" ry="110" fill="#1d3a28" />
+                <ellipse cx="220" cy="440" rx="90" ry="70" fill="#234631" />
+              </g>
+
+              {/* holy light from the pedestal */}
+              <g className="rays">
+                {Array.from({ length: 9 }, (_, i) => (
+                  <polygon key={i} points="1010,560 990,-200 1030,-200" fill="#fff6c8" opacity=".22" transform={`rotate(${(i - 4) * 9} 1010 560)`} />
+                ))}
+              </g>
+              <circle className="holy" cx="1010" cy="560" r="230" fill="url(#holy)" />
+
+              {/* ground */}
+              <path d="M0 700 Q 400 680 800 705 T 1600 690 V 900 H 0 Z" fill="#2c5a34" />
+              <path d="M0 735 Q 500 715 900 740 T 1600 730 V 900 H 0 Z" fill="#244a2b" />
+              <g fill="#3f7a45">
+                {Array.from({ length: 34 }, (_, i) => (
+                  <path key={i} d={`M${i * 48 + 10} 712 l6 -22 l6 22 Z`} />
+                ))}
+              </g>
+
+              {/* the sword, standing in the stone (drawn before the stone so the stone hides the lower blade) */}
+              <g className="sword">
+                <circle cx="1010" cy="518" r="7" fill="#e8c15a" stroke="#8a6a1e" strokeWidth="2" />
+                <rect x="1004" y="524" width="12" height="32" rx="3" fill="#5b3f9e" stroke="#2e1f55" strokeWidth="2" />
+                <path d="M968 556 Q 990 548 1010 558 Q 1030 548 1052 556 L 1046 568 Q 1030 562 1010 570 Q 990 562 974 568 Z" fill="#e8c15a" stroke="#8a6a1e" strokeWidth="2" />
+                <circle cx="1010" cy="562" r="4" fill="#3f8fd9" />
+                <path d="M1001 570 H 1019 L 1019 688 L 1010 702 L 1001 688 Z" fill="url(#bladeG)" stroke="#5d7584" strokeWidth="2" />
+                <path d="M1010 574 V 690" stroke="#c4d4de" strokeWidth="2" />
+                <circle className="glint" cx="1010" cy="600" r="4" fill="#fff" />
+              </g>
+
+              {/* stone pedestal */}
+              <g>
+                <path d="M930 720 L 950 650 H 1070 L 1090 720 Z" fill="#7b8580" stroke="#3a403d" strokeWidth="3" />
+                <path d="M950 650 L 965 632 H 1055 L 1070 650 Z" fill="#9aa39e" stroke="#3a403d" strokeWidth="3" />
+                <path d="M995 690 L1010 664 L1025 690 Z M980 714 L995 690 L1010 714 Z M1010 714 L1025 690 L1040 714 Z" fill="#c9a84a" opacity=".55" />
+                <path d="M944 700 q 20 -8 40 0 M1040 700 q 20 -8 36 2" stroke="#4f6a46" strokeWidth="4" fill="none" />
+              </g>
+
+              {/* the Hero (original drawing: green tunic, long cap) — feet at local 0,0, facing right */}
+              <g transform="translate(360 720) scale(1.3)">
+                <g className="hero-walk">
+                  <g className="hero-wake">
+                    <g className="leg back"><rect x="-13" y="-58" width="11" height="44" fill="#d8c79a" /><rect x="-16" y="-18" width="17" height="18" rx="3" fill="#6b4423" /></g>
+                    <circle cx="-26" cy="-98" r="20" fill="#2b4f9c" stroke="#162a55" strokeWidth="3" />
+                    <path d="M-34 -104 L-26 -116 L-18 -104 Z" fill="#c9a84a" />
+                    <path d="M-22 -130 L 24 -130 L 32 -55 L -30 -55 Z" fill="#3e8f3a" stroke="#1e4d1c" strokeWidth="2.5" />
+                    <rect x="-27" y="-92" width="56" height="9" fill="#6b4423" />
+                    <rect x="-2" y="-93" width="11" height="11" rx="2" fill="#c9a84a" />
+                    <g className="leg front"><rect x="1" y="-58" width="11" height="44" fill="#e6d6a8" /><rect x="-1" y="-18" width="19" height="18" rx="3" fill="#7a4e28" /></g>
+                    <g className="head">
+                      <circle cx="4" cy="-150" r="19" fill="#f2c9a0" stroke="#a4744c" strokeWidth="2" />
+                      <path d="M20 -152 L 34 -160 L 22 -146 Z" fill="#f2c9a0" stroke="#a4744c" strokeWidth="1.5" />
+                      <path d="M-14 -158 Q 2 -176 22 -160 L 16 -150 Q 6 -160 -12 -148 Z" fill="#f0c94a" />
+                      <path d="M-16 -160 Q 4 -190 22 -164 Q 0 -168 -20 -150 Q -46 -138 -64 -118 Q -40 -150 -16 -160 Z" fill="#3e8f3a" stroke="#1e4d1c" strokeWidth="2.5" />
+                      <path className="eye-closed" d="M8 -150 q 5 3 9 0" stroke="#3b2414" strokeWidth="2.5" fill="none" />
+                      <g className="eye-open"><ellipse cx="13" cy="-151" rx="3" ry="4" fill="#fff" /><circle cx="14" cy="-151" r="2.2" fill="#1f5fa8" /></g>
+                    </g>
+                    <g className="arm"><rect x="12" y="-126" width="11" height="48" rx="5" fill="#3e8f3a" stroke="#1e4d1c" strokeWidth="2" /><circle cx="17.5" cy="-76" r="7" fill="#f2c9a0" stroke="#a4744c" strokeWidth="1.5" /></g>
+                  </g>
+                </g>
+              </g>
+
+              {/* sleep Zs and the waking "!" */}
+              <g className="zzz" fill="#e8fffb" fontFamily="Georgia, serif" fontWeight="700">
+                <text x="190" y="650" fontSize="34" className="z1">z</text>
+                <text x="222" y="612" fontSize="44" className="z2">Z</text>
+                <text x="262" y="566" fontSize="54" className="z3">Z</text>
+              </g>
+              <text className="bang" x="375" y="455" fontSize="86" fontWeight="900" fill="#ffe14a" stroke="#7a4a00" strokeWidth="4" fontFamily="Georgia, serif">!</text>
+
+              {/* fireflies */}
+              <g className="flies" fill="#e8ffb0">
+                {Array.from({ length: 14 }, (_, i) => (
+                  <circle key={i} cx={120 + ((i * 263) % 1380)} cy={480 + ((i * 97) % 200)} r="3" style={{ animationDelay: `${-i * 0.7}s` }} />
+                ))}
+              </g>
+            </g>
+          </svg>
+
+          <div className="caption c1">Ordon Woods · first light</div>
+          <div className="caption c2">The blade that wakes the Twilight Desk…</div>
+          <div className="flash" />
+          <div className="final-title">
+            <Triforce size={64} />
+            <h1>CAMPUS CUSTOMS</h1>
+            <h2>Twilight Desk</h2>
+          </div>
+          <div className="letterbox top" />
+          <div className="letterbox bottom" />
+        </>
+      )}
+    </div>
+  )
+}

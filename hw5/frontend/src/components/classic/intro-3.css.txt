@@ -1,0 +1,300 @@
+/* Intro cinematic timeline (seconds after PRESS START):
+   0.3–3.0 night lifts to dawn · 0.4–2.9 asleep (Zzz) · 3.0 "!" wakes · 3.9–6.1 walks to the stone
+   6.1–6.5 reaches · 6.6–7.4 pulls the sword up · 7.4–7.9 raises it overhead · 7.8 light burst
+   8.2–9.8 camera dives into the blade · 9.4 white flash · 9.7–10.8 title · 11.0 dashboard */
+
+.intro {
+  position: fixed; inset: 0; z-index: 100; background: #020506; overflow: hidden; color: #efe2c0;
+  font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+}
+.intro.out { animation: intro-out .45s ease-in forwards; }
+@keyframes intro-out { to { opacity: 0; } }
+.intro-skip {
+  position: absolute; right: 22px; top: 18px; z-index: 5; font: 600 13px 'Segoe UI', system-ui, sans-serif;
+  color: #cfe5e1; background: rgba(0, 0, 0, .45); border: 1px solid rgba(207, 229, 225, .35); border-radius: 99px;
+  padding: 7px 14px; cursor: pointer;
+}
+.intro-skip:hover { border-color: #36d3c0; color: #36d3c0; }
+
+/* ---------- title screen */
+.title-screen {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; text-align: center; cursor: pointer;
+  background: radial-gradient(700px 500px at 50% 45%, #0f2a28, #020506 70%);
+}
+.title-portal { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); opacity: .35; }
+.spin.slow { animation: spin 14s linear infinite; }
+.title-tri { position: relative; filter: drop-shadow(0 0 24px rgba(232, 193, 90, .7)); animation: float 3s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-8px); } }
+.title-screen h1 {
+  position: relative; margin: 18px 0 0; font-size: clamp(38px, 6vw, 76px); letter-spacing: 10px; color: #e8c15a;
+  text-shadow: 0 0 30px rgba(232, 193, 90, .45), 0 3px 0 #6b4c0f;
+}
+.title-screen h2 { position: relative; margin: 4px 0 40px; font-weight: 400; font-size: 24px; letter-spacing: 6px; color: #36d3c0; }
+.press { position: relative; margin: 0; font-size: 22px; letter-spacing: 5px; color: #fff; animation: blinkp 1.1s steps(2, start) infinite; }
+@keyframes blinkp { to { visibility: hidden; } }
+.hint { position: relative; margin-top: 12px; font: 13px 'Segoe UI', system-ui, sans-serif; color: #8aa3a0; }
+
+/* ---------- the scene */
+.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+.intro.play .camera {
+  transform-box: view-box; transform-origin: 952px 410px;
+  animation: dive 1.6s cubic-bezier(.6, 0, .9, .4) 8.2s both;
+}
+@keyframes dive { from { transform: scale(1); } to { transform: scale(16); } }
+
+.intro.play .night { animation: fadeout 2.7s ease-in .3s both; }
+.intro.play .stars { animation: fadeout 2.4s ease-in .3s both; }
+@keyframes fadeout { to { opacity: 0; } }
+.intro.play .sun { animation: sunrise 4s ease-out .3s both; }
+@keyframes sunrise { from { transform: translateY(220px); opacity: .3; } to { transform: none; opacity: 1; } }
+
+.rays, .holy { opacity: 0; }
+.intro.play .rays { transform-box: view-box; transform-origin: 1010px 560px; animation: rays 3s ease-out 6.6s both; }
+@keyframes rays {
+  0% { opacity: 0; transform: rotate(-6deg); }
+  40% { opacity: .5; }
+  45% { opacity: 1; }
+  100% { opacity: .85; transform: rotate(6deg); }
+}
+.intro.play .holy { transform-box: view-box; transform-origin: 1010px 560px; animation: holy 1.4s ease-out 7.7s both; }
+@keyframes holy { 0% { opacity: 0; transform: scale(.4); } 25% { opacity: 1; transform: scale(1.4); } 100% { opacity: .55; transform: scale(1.1); } }
+
+/* the Hero */
+.hero-wake, .hero-walk, .leg, .arm, .head { transform-box: fill-box; }
+.hero-wake { transform-origin: 50% 100%; transform: rotate(-90deg) translateY(-6px); }
+.intro.play .hero-wake { animation: wake .7s cubic-bezier(.3, 1.6, .5, 1) 3.05s both; }
+@keyframes wake {
+  from { transform: rotate(-90deg) translateY(-6px); }
+  to { transform: rotate(0deg); }
+}
+.intro.play .hero-walk { animation: walk 2.2s linear 3.9s both; }
+@keyframes walk {
+  0% { transform: translate(0, 0); } 12.5% { transform: translate(55px, -4px); } 25% { transform: translate(110px, 0); }
+  37.5% { transform: translate(165px, -4px); } 50% { transform: translate(219px, 0); } 62.5% { transform: translate(274px, -4px); }
+  75% { transform: translate(329px, 0); } 87.5% { transform: translate(384px, -4px); } 100% { transform: translate(438.5px, 0); }
+}
+.leg { transform-origin: 50% 0; }
+.intro.play .leg.front { animation: swing .275s ease-in-out 3.9s 8 alternate both; }
+.intro.play .leg.back { animation: swing-back .275s ease-in-out 3.9s 8 alternate both; }
+@keyframes swing { from { transform: rotate(-24deg); } to { transform: rotate(24deg); } }
+@keyframes swing-back { from { transform: rotate(24deg); } to { transform: rotate(-24deg); } }
+.arm { transform-origin: 50% 0; }
+.intro.play .arm { animation: reach 1.8s ease-in-out 6.1s both; }
+@keyframes reach {
+  0% { transform: rotate(0); } 22% { transform: rotate(-90deg); } 28% { transform: rotate(-90deg); }
+  72% { transform: rotate(-180deg); } 100% { transform: rotate(-180deg); }
+}
+.eye-open { opacity: 0; }
+.intro.play .eye-closed { animation: hide 0s linear 3.0s both; }
+.intro.play .eye-open { animation: show 0s linear 3.0s both; }
+@keyframes hide { to { opacity: 0; } }
+@keyframes show { to { opacity: 1; } }
+
+.zzz text { opacity: 0; }
+.intro.play .zzz .z1 { animation: zz 1.6s ease-out .4s 2 both; }
+.intro.play .zzz .z2 { animation: zz 1.6s ease-out .75s 2 both; }
+.intro.play .zzz .z3 { animation: zz 1.6s ease-out 1.1s 1 both; }
+@keyframes zz { 0% { opacity: 0; transform: translateY(10px); } 30% { opacity: .9; } 100% { opacity: 0; transform: translateY(-40px); } }
+.bang { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; }
+.intro.play .bang { animation: bang .9s cubic-bezier(.3, 1.8, .5, 1) 3.0s both; }
+@keyframes bang { 0% { opacity: 0; transform: scale(.2); } 25% { opacity: 1; transform: scale(1.15); } 75% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: translateY(-12px); } }
+
+/* the sword */
+.sword { transform-box: view-box; transform-origin: 1010px 560px; }
+.intro.play .sword { animation: pull 1.3s ease-in-out 6.6s both, sword-glow 2s ease-out 7.6s both; }
+@keyframes pull {
+  0% { transform: translate(0, 0) rotate(0); }
+  12% { transform: translate(0, 4px) rotate(0); }
+  62% { transform: translate(-58px, -75px) rotate(0); }
+  100% { transform: translate(-58px, -75px) rotate(180deg); }
+}
+@keyframes sword-glow { from { filter: drop-shadow(0 0 0 #fff); } 30% { filter: drop-shadow(0 0 18px #fff6c8); } to { filter: drop-shadow(0 0 10px #fff6c8); } }
+.glint { opacity: 0; }
+.intro.play .glint { animation: glint 1.2s ease-in-out 1.4s 4 both; }
+@keyframes glint { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+
+.flies circle { animation: fly 4s ease-in-out infinite alternate; opacity: .8; }
+@keyframes fly { 50% { transform: translate(18px, -26px); opacity: .2; } 100% { transform: translate(-12px, -8px); opacity: .9; } }
+
+/* captions, letterbox, flash and title card */
+.caption {
+  position: absolute; left: 0; right: 0; bottom: 13%; text-align: center; font-size: clamp(18px, 2.2vw, 30px);
+  letter-spacing: 3px; color: #fff4d6; text-shadow: 0 2px 12px rgba(0, 0, 0, .8); opacity: 0;
+}
+.intro.play .c1 { animation: caption 2.4s ease-in-out 1.0s both; }
+.intro.play .c2 { animation: caption 1.8s ease-in-out 6.2s both; }
+@keyframes caption { 0% { opacity: 0; transform: translateY(8px); } 20%, 80% { opacity: 1; transform: none; } 100% { opacity: 0; } }
+.letterbox { position: absolute; left: 0; right: 0; height: 9vh; background: #000; z-index: 2; }
+.letterbox.top { top: 0; }
+.letterbox.bottom { bottom: 0; }
+.intro.play .letterbox.top { animation: lb-top .8s ease-in 9.3s both; }
+.intro.play .letterbox.bottom { animation: lb-bot .8s ease-in 9.3s both; }
+@keyframes lb-top { to { transform: translateY(-100%); } }
+@keyframes lb-bot { to { transform: translateY(100%); } }
+.flash { position: absolute; inset: 0; background: #fffdf2; opacity: 0; z-index: 3; pointer-events: none; }
+.intro.play .flash { animation: flash 1.6s ease-out 9.35s both; }
+@keyframes flash { 0% { opacity: 0; } 25% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: .85; } }
+.final-title {
+  position: absolute; inset: 0; z-index: 4; display: grid; place-content: center; justify-items: center; opacity: 0; pointer-events: none;
+}
+.final-title h1 { margin: 10px 0 0; font-size: clamp(36px, 5.5vw, 70px); letter-spacing: 10px; color: #b48a1f; text-shadow: 0 2px 0 #fff, 0 0 24px rgba(232, 193, 90, .6); }
+.final-title h2 { margin: 2px 0 0; font-weight: 400; letter-spacing: 6px; color: #1c7f75; }
+.intro.play .final-title { animation: titlecard 1.6s ease-out 9.7s both; }
+@keyframes titlecard { 0% { opacity: 0; transform: scale(.92); } 35% { opacity: 1; transform: none; } 100% { opacity: 1; transform: scale(1.04); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .intro.play * { animation-duration: .01ms !important; animation-delay: 0s !important; }
+}
+
+/* ================= cinematic pass ================= */
+.scene { filter: contrast(1.07) saturate(1.12); }
+
+/* parallax: the camera follows the Hero right, so nearer layers slide further */
+.layer { transform-box: view-box; }
+.intro.play .layer.sky { animation: px-sky 7s ease-in-out 1s both; }
+.intro.play .layer.far { animation: px-far 7s ease-in-out 1s both; }
+.intro.play .layer.mid { animation: px-mid 7s ease-in-out 1s both; }
+.intro.play .layer.near { animation: px-near 7s ease-in-out 1s both; }
+@keyframes px-sky { to { transform: translateX(-12px); } }
+@keyframes px-far { to { transform: translateX(-34px); } }
+@keyframes px-mid { to { transform: translateX(-60px); } }
+@keyframes px-near { to { transform: translateX(-150px); } }
+
+/* clouds and fog drift (fog layers also carry the mid/stage parallax via their parent class) */
+.intro.play .clouds { animation: drift-clouds 14s linear both; }
+@keyframes drift-clouds { from { transform: translateX(0); } to { transform: translateX(-160px); } }
+.fog-back rect { animation: drift-fog 12s linear infinite alternate; }
+.fog-front rect { animation: drift-fog2 9s linear infinite alternate; }
+@keyframes drift-fog { from { transform: translateX(-80px); } to { transform: translateX(80px); } }
+@keyframes drift-fog2 { from { transform: translateX(90px); } to { transform: translateX(-90px); } }
+.sunrays { opacity: 0; }
+.intro.play .sunrays { animation: sunrays 4s ease-out 1.2s both; }
+@keyframes sunrays { to { opacity: .9; } }
+
+/* post-processing layers over the scene */
+.post, .motes { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.motes { z-index: 1; }
+.post.nightgrade {
+  background: linear-gradient(180deg, rgba(1, 6, 8, .9), rgba(6, 30, 30, .78) 60%, rgba(10, 45, 40, .7));
+  mix-blend-mode: multiply;
+}
+.intro.play .post.nightgrade { animation: fadeout 3s ease-in .3s both; }
+.post.bloom {
+  z-index: 1; mix-blend-mode: screen; opacity: 0;
+  background:
+    radial-gradient(28% 34% at 73.5% 66%, rgba(255, 214, 140, .55), transparent 70%),
+    radial-gradient(60% 50% at 70% 70%, rgba(255, 170, 90, .18), transparent 70%);
+}
+.intro.play .post.bloom { animation: bloom-dawn 4s ease-out .8s both, bloom-burst 2.4s ease-out 7.7s; }
+@keyframes bloom-dawn { to { opacity: 1; } }
+@keyframes bloom-burst {
+  0% { background-size: 100% 100%; filter: brightness(1); }
+  20% { filter: brightness(1.9); }
+  100% { filter: brightness(1.1); }
+}
+.post.flare { z-index: 2; mix-blend-mode: screen; }
+.post.flare i {
+  position: absolute; border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, rgba(255, 250, 225, .9), rgba(140, 230, 255, .25) 55%, transparent 70%);
+}
+.post.flare i:nth-child(1) { left: 56%; top: 33%; width: 9vmin; height: 9vmin; }
+.post.flare i:nth-child(2) { left: 47%; top: 44%; width: 4vmin; height: 4vmin; background: radial-gradient(circle, rgba(160, 255, 220, .7), transparent 70%); }
+.post.flare i:nth-child(3) { left: 40%; top: 52%; width: 14vmin; height: 14vmin; background: radial-gradient(circle, transparent 45%, rgba(255, 200, 140, .35) 55%, transparent 68%); }
+.post.flare i:nth-child(4) { left: 30%; top: 64%; width: 6vmin; height: 6vmin; background: radial-gradient(circle, rgba(200, 170, 255, .6), transparent 70%); }
+.intro.play .post.flare i { animation: flare 1.8s ease-out 7.75s both; }
+@keyframes flare { 0% { opacity: 0; transform: scale(.6); } 25% { opacity: 1; } 100% { opacity: 0; transform: scale(1.2); } }
+.post.vignette {
+  z-index: 2;
+  background: radial-gradient(120% 90% at 50% 55%, transparent 55%, rgba(0, 0, 0, .55) 85%, rgba(0, 0, 0, .85) 100%);
+}
+.post.grain {
+  z-index: 2; opacity: .13; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain .5s steps(4) infinite;
+}
+@keyframes grain {
+  0% { background-position: 0 0; } 25% { background-position: -60px 40px; }
+  50% { background-position: 50px -70px; } 75% { background-position: -30px -20px; } 100% { background-position: 0 0; }
+}
+/* keep captions, flash and title above the post layers */
+.caption { z-index: 3; }
+
+/* birds cross the dawn sky; the moon fades as the sun rises */
+.intro.play .birds { animation: birds 9s linear .8s both; }
+@keyframes birds { from { transform: translate(-260px, 40px); } to { transform: translate(520px, -70px); } }
+.bird { animation: flap .5s ease-in-out infinite alternate; transform-box: fill-box; transform-origin: 50% 50%; }
+.bird.b1 { animation-delay: -.2s; } .bird.b2 { animation-delay: -.35s; } .bird.b3 { animation-delay: -.1s; } .bird.b4 { animation-delay: -.42s; }
+@keyframes flap { to { transform: scaleY(.45); } }
+.intro.play .moon { animation: fadeout 4s ease-in 1.5s both; }
+/* a light streak runs down the blade as the camera dives in */
+.intro.play .sword .shine { transform-box: view-box; animation: shine 1.2s ease-in-out 8.3s both; }
+@keyframes shine { 0% { opacity: 0; transform: translateY(-20px); } 40% { opacity: .9; } 100% { opacity: 0; transform: translateY(80px); } }
+
+/* ================= detail pass 2 ================= */
+/* the Twilight portal turns, then closes as dawn breaks */
+.tw-portal { transform-box: fill-box; transform-origin: 50% 50%; }
+.tw-ring1 { animation: spin 9s linear infinite; transform-box: fill-box; transform-origin: 50% 50%; }
+.tw-ring2 { animation: spin 6s linear infinite reverse; transform-box: fill-box; transform-origin: 50% 50%; }
+.intro.play .tw-portal { animation: portal-close 2.6s ease-in .4s both; }
+@keyframes portal-close { 0% { opacity: 1; transform: scale(1); } 70% { opacity: .6; transform: scale(.55) rotate(40deg); } 100% { opacity: 0; transform: scale(.05) rotate(90deg); } }
+.intro.play .cloud-rims { animation: show-rims 4s ease-out 1s both; }
+@keyframes show-rims { from { opacity: 0; } to { opacity: .7; } }
+
+/* castle windows flicker, banners flutter, smoke curls up */
+.win { animation: flicker 1.8s ease-in-out infinite alternate; }
+.win.w1 { animation-delay: -.6s; } .win.w2 { animation-delay: -1.2s; }
+@keyframes flicker { to { opacity: .35; } }
+.banner { transform-box: fill-box; transform-origin: 0 50%; animation: flutter .6s ease-in-out infinite alternate; }
+@keyframes flutter { to { transform: scaleX(.7) skewY(8deg); } }
+.puff { transform-box: fill-box; transform-origin: 50% 100%; animation: puff 5s ease-in-out infinite; }
+.puff.p1 { animation-delay: -1.7s; } .puff.p2 { animation-delay: -3.1s; }
+@keyframes puff { 0% { transform: translate(0, 0) scale(.8); opacity: .8; } 100% { transform: translate(18px, -50px) scale(1.3); opacity: 0; } }
+.epona-head { transform-box: fill-box; transform-origin: 0 0; animation: graze 3.2s ease-in-out infinite; }
+@keyframes graze { 0%, 55% { transform: rotate(0); } 70%, 90% { transform: rotate(-38deg); } 100% { transform: rotate(0); } }
+
+/* the owl: dozing, startled by the "!", then away over the trees */
+.owl-eyes-open { opacity: 0; }
+.intro.play .owl-eyes-shut { animation: hide 0s linear 3.05s both; }
+.intro.play .owl-eyes-open { animation: show 0s linear 3.05s both; }
+.owl-body { transform-box: fill-box; transform-origin: 50% 100%; }
+.intro.play .owl-body { animation: owl-fly 2.2s cubic-bezier(.4, 0, .7, 1) 3.35s both; }
+@keyframes owl-fly { 0% { transform: translate(0, 0); } 10% { transform: translate(0, -6px); } 100% { transform: translate(560px, -420px) scale(.5); opacity: .4; } }
+.owl-wing { transform-box: fill-box; }
+.owl-wing.l { transform-origin: 100% 0; } .owl-wing.r { transform-origin: 0 0; }
+.intro.play .owl-wing.l { animation: wing-l .16s ease-in-out 3.35s 14 alternate both; }
+.intro.play .owl-wing.r { animation: wing-r .16s ease-in-out 3.35s 14 alternate both; }
+@keyframes wing-l { to { transform: rotate(-55deg); } }
+@keyframes wing-r { to { transform: rotate(55deg); } }
+
+/* the pond shimmers and ripples; reeds and grass bend in the breeze */
+.shimmer { animation: shimmer 2.4s ease-in-out infinite alternate; }
+.shimmer.s1 { animation-delay: -.8s; } .shimmer.s2 { animation-delay: -1.6s; } .shimmer.s3 { animation-delay: -.4s; } .shimmer.s4 { animation-delay: -1.1s; }
+@keyframes shimmer { from { opacity: .15; transform: translateX(-6px); } to { opacity: .7; transform: translateX(6px); } }
+.ripple { transform-box: fill-box; transform-origin: 50% 50%; animation: ripple 2.8s ease-out infinite; }
+@keyframes ripple { from { transform: scale(.3); opacity: .9; } to { transform: scale(3); opacity: 0; } }
+.reed, .sway, .layer.near path, .cap-tail { transform-box: fill-box; transform-origin: 50% 100%; }
+.reed { animation: bend 3s ease-in-out infinite alternate; }
+.sway { animation: bend-soft 3.6s ease-in-out infinite alternate; }
+.layer.near path { animation: bend 4.2s ease-in-out infinite alternate; }
+@keyframes bend { from { transform: skewX(-4deg); } to { transform: skewX(5deg); } }
+@keyframes bend-soft { from { transform: skewX(-2deg); } to { transform: skewX(2.5deg); } }
+.cap-tail { transform-origin: 100% 0; animation: captail .9s ease-in-out infinite alternate; }
+@keyframes captail { from { transform: rotate(-10deg); } to { transform: rotate(14deg); } }
+/* the gust when the sword comes free */
+.intro.play .sway { animation: bend-soft 3.6s ease-in-out infinite alternate, gust 1.4s ease-out 7.75s; }
+@keyframes gust { 30% { transform: skewX(16deg); } 100% { transform: skewX(0); } }
+
+/* runes light one by one as he approaches; a dawn shaft falls on the stone */
+.rune { opacity: 0; }
+.intro.play .rune { animation: rune 1s ease-out both; }
+.intro.play .rune.r0 { animation-delay: 5.4s; } .intro.play .rune.r1 { animation-delay: 5.7s; }
+.intro.play .rune.r2 { animation-delay: 6.0s; } .intro.play .rune.r3 { animation-delay: 6.3s; }
+.intro.play .rune.r4 { animation-delay: 6.6s; }
+@keyframes rune { 0% { opacity: 0; } 40% { opacity: 1; filter: drop-shadow(0 0 10px #5af0dc); } 100% { opacity: .85; filter: drop-shadow(0 0 5px #5af0dc); } }
+.intro.play .stone-shaft { animation: shaft 3s ease-out 2.2s both; }
+@keyframes shaft { to { opacity: .55; } }
+
+.portal-layer { z-index: 1; filter: none; pointer-events: none; }
+.pond-sky { opacity: .2; }
+.intro.play .pond-sky { animation: pondsky 3.2s ease-in .4s both; }
+@keyframes pondsky { from { opacity: .15; } to { opacity: .85; } }

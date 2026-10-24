@@ -1,0 +1,397 @@
+{
+  "description": "Problem 9: all three tickets run on the React board from a fresh reset, each until resolved.",
+  "database": "data/campus_customs_new.db",
+  "starting_checking_balance": 3400.0,
+  "ending_checking_balance": 160.0,
+  "ending_balance_in_db": 160.0,
+  "cash_matches_db": true,
+  "tickets": [
+    {
+      "ticket_id": 101,
+      "subject": "Bulldog tee",
+      "requester": "Tauhid Zaman",
+      "final_status": "resolved",
+      "run_id": "7306e7a4f7d4",
+      "outcome": "Leave ticket waiting_on_human. Do not promise a ship date. After the invoice payment is approved, confirm restock timing and availability before updating the customer.",
+      "finding": "CC-TEE-WHITE size S has 0 on the shelf; the customer requested 1. Invoice 501 to Bulldog Print Co is open for $840, due 2026-08-28 (3 days overdue), with no payment recorded. Inventory says its unpaid status blocks fulfillment; vendor lead time is 5 days, but no arrival date can be estimated until payment.",
+      "customer_message_draft": "Hi Tauhid, we’re currently out of stock in size S. We’re checking on availability and timing, and will follow up once we can confirm both. Please don’t rely on a ship date yet.",
+      "agents": {
+        "Boss": {
+          "summary": "Ticket 101 only was handled. It is waiting on human approval for invoice 501 and the customer update; no payment was made and no shipment date is confirmed.",
+          "tools": {
+            "get_shop_date": 1,
+            "get_ticket": 1,
+            "set_ticket_status": 1,
+            "add_ticket_note": 1
+          },
+          "asked": [
+            "Inventory",
+            "Accounting",
+            "CustomerService"
+          ],
+          "asked_by": [],
+          "notes_written": 1
+        },
+        "Inventory": {
+          "summary": "Ticket 101 requests 1 CC-TEE-WHITE in size S; shelf stock is 0, so it is short by 1. Linked invoice 501 from Bulldog Print Co is open and $840.00, due 2026-08-28, 3 days overdue; the unpaid invoice blocks the order from shipping, so do not promise a restock date. The vendor's lead time is 5 days, but an estimate can only be given after the invoice is paid.",
+          "tools": {
+            "get_ticket": 2,
+            "get_shop_date": 2,
+            "check_stock": 2,
+            "get_invoice": 2
+          },
+          "asked": [],
+          "asked_by": [
+            "Boss",
+            "CustomerService"
+          ],
+          "notes_written": 0
+        },
+        "Accounting": {
+          "summary": "Invoice 501 is open for $840.00, due 2026-08-28 and 3 days overdue; no payment has been recorded. Checking balance is $3,400.00, so payment is needed to unblock this order; recommend human approval to pay $840.00, leaving $2,560.00. I added these facts and recommendation to ticket 101.",
+          "tools": {
+            "get_shop_date": 1,
+            "get_invoice": 1,
+            "list_payments": 1,
+            "get_cash_balance": 1,
+            "get_ticket": 1,
+            "add_ticket_note": 1
+          },
+          "asked": [],
+          "asked_by": [
+            "Boss"
+          ],
+          "notes_written": 1
+        },
+        "CustomerService": {
+          "summary": "Ticket 101 is for Tauhid Zaman, requesting 1 CC-TEE-WHITE in size S. Shelf stock is zero; Inventory reports the order is blocked pending restock, and no restock or ship date can be confirmed.",
+          "tools": {
+            "get_ticket": 1,
+            "check_stock": 1
+          },
+          "asked": [
+            "Inventory"
+          ],
+          "asked_by": [
+            "Boss"
+          ],
+          "notes_written": 0
+        }
+      },
+      "delegations": [
+        {
+          "from": "Boss",
+          "to": "Inventory",
+          "task": "Ticket 101: check SKU CC-TEE-WHITE, size S, qty 1 availability. If unavailable, give restock lead time and say whether invoice 501 blocks fulfillment."
+        },
+        {
+          "from": "Boss",
+          "to": "Accounting",
+          "task": "Ticket 101: report invoice 501 status, exact amount due, due date, and cash balance; say whether payment is needed to unblock this order."
+        },
+        {
+          "from": "Boss",
+          "to": "CustomerService",
+          "task": "Ticket 101: draft a brief honest customer update for a request for one CC-TEE-WHITE size S. Do not promise availability or ship date; ask customer to await confirmation."
+        },
+        {
+          "from": "CustomerService",
+          "to": "Inventory",
+          "task": "Ticket 101, SKU CC-TEE-WHITE, size S, qty 1. Shelf check returned qty 0. Please advise restock status/timing and any order constraint relevant to a customer update."
+        }
+      ],
+      "guardrail_stops": [],
+      "human_approvals": [
+        {
+          "kind": "payment",
+          "description": "Approve payment of $840.00 to Bulldog Print Co for open, overdue invoice 501; the unpaid invoice blocks fulfillment. The checking balance would be $2,560.00 after payment.",
+          "amount": 840.0,
+          "decision": "approved",
+          "by": "Shop Owner",
+          "at": "2026-10-24T21:09:00+00:00",
+          "payment": {
+            "payment_id": 1,
+            "kind": "invoice",
+            "ref_id": 501,
+            "amount": 840.0,
+            "account": "checking",
+            "paid_at": "2026-08-31",
+            "approved_by": "Shop Owner",
+            "balance_before": 3400.0,
+            "balance_after": 2560.0,
+            "ticket_id": 101,
+            "ticket_resolved": false
+          }
+        },
+        {
+          "kind": "customer_message",
+          "description": "Approve sending the drafted customer update: size S is out of stock; we’re checking availability and timing, with no ship date promised.",
+          "amount": null,
+          "decision": "approved",
+          "by": "Shop Owner",
+          "at": "2026-10-24T21:09:03+00:00",
+          "payment": null
+        }
+      ],
+      "cash_change": -840.0,
+      "model_usage": {
+        "requests": 18,
+        "input_tokens": 38940,
+        "output_tokens": 3677,
+        "tool_calls": 24
+      }
+    },
+    {
+      "ticket_id": 102,
+      "subject": "Rent due",
+      "requester": "Elm City Properties",
+      "final_status": "resolved",
+      "run_id": "d2780fb52839",
+      "outcome": "Ticket set to waiting_on_human. Request human approval for the $2,400 rent payment; no payment has been made.",
+      "finding": "Facilities confirmed the notice's sender, Elm City Properties, matches lease 1. Rent of $2,400 is due 2026-09-02, matching the notice's “in 2 days” timing; no mismatch or unusual payment instruction is shown. Accounting reports no prior rent payments, $2,560 in checking, and $160 remaining after rent.",
+      "customer_message_draft": null,
+      "agents": {
+        "Boss": {
+          "summary": "Ticket 102 is awaiting human approval of the matching lease rent payment. No other tickets were worked.",
+          "tools": {
+            "get_shop_date": 1,
+            "get_ticket": 1,
+            "set_ticket_status": 1,
+            "add_ticket_note": 1
+          },
+          "asked": [
+            "Facilities",
+            "Accounting"
+          ],
+          "asked_by": [],
+          "notes_written": 1
+        },
+        "Facilities": {
+          "summary": "The ticket identifies Elm City Properties as the requester/sender, matching lease 1’s landlord. The notice says rent is due in 2 days, matching the lease’s 2026-09-02 due date from 2026-08-31; the email text does not state an amount, so that field cannot be compared (the lease rent is $2,400). No mismatch or unusual payment instruction is shown in the provided notice, so there is no specific fraud concern apparent; Accounting was asked to plan the payment, which still requires human approval.",
+          "tools": {
+            "get_shop_date": 2,
+            "get_ticket": 2,
+            "get_lease": 2
+          },
+          "asked": [
+            "Accounting",
+            "Accounting"
+          ],
+          "asked_by": [
+            "Accounting",
+            "Boss"
+          ],
+          "notes_written": 0
+        },
+        "Accounting": {
+          "summary": "Lease 1 records $2,400 rent due 2026-09-02 (two days from shop date 2026-08-31); no prior rent payments are recorded. Checking has $2,560 as of 2026-08-31, so rent is affordable: $2,560 − $2,400 = $160 remaining after payment. Facilities confirmed the notice matches the lease landlord and due timing; payment still requires human approval.",
+          "tools": {
+            "get_shop_date": 2,
+            "get_lease": 2,
+            "list_payments": 2,
+            "get_cash_balance": 2,
+            "get_ticket": 1,
+            "add_ticket_note": 1
+          },
+          "asked": [
+            "Facilities"
+          ],
+          "asked_by": [
+            "Boss",
+            "Facilities"
+          ],
+          "notes_written": 1
+        }
+      },
+      "delegations": [
+        {
+          "from": "Boss",
+          "to": "Facilities",
+          "task": "Ticket 102, lease_id 1. Compare the emailed rent notice (\"rent due in 2 days\") with the lease record: landlord, amount, due date, and whether any mismatch or fraud concern. Report tool-backed facts."
+        },
+        {
+          "from": "Boss",
+          "to": "Accounting",
+          "task": "Ticket 102, lease_id 1. Provide rent payment amount owed from the lease/records, due date if available, checking cash balance, any prior payment facts, and whether payment is affordable. Return exact payment amount and lease ref id as supported by tools."
+        },
+        {
+          "from": "Facilities",
+          "to": "Accounting",
+          "task": "Ticket 102, lease_id 1: Facilities verified rent notice against the lease. Please plan payment for the matching monthly rent; do not execute payment, which requires human approval. Lease rent $2,400 due 2026-09-02."
+        },
+        {
+          "from": "Accounting",
+          "to": "Facilities",
+          "task": "Ticket 102, lease_id 1: verify the rent notice against the lease/landlord records before payment. Return whether notice matches, with checked facts."
+        }
+      ],
+      "guardrail_stops": [
+        {
+          "from": "Facilities",
+          "to": "Accounting",
+          "reason": "Accounting is already working on this request (Boss -> Accounting -> Facilities); answer with what you have."
+        }
+      ],
+      "human_approvals": [
+        {
+          "kind": "payment",
+          "description": "Approve payment of $2,400 rent to Elm City Properties for lease 1, due 2026-09-02. This leaves $160 in checking.",
+          "amount": 2400.0,
+          "decision": "approved",
+          "by": "Shop Owner",
+          "at": "2026-10-24T21:11:02+00:00",
+          "payment": {
+            "payment_id": 2,
+            "kind": "rent",
+            "ref_id": 1,
+            "amount": 2400.0,
+            "account": "checking",
+            "paid_at": "2026-08-31",
+            "approved_by": "Shop Owner",
+            "balance_before": 2560.0,
+            "balance_after": 160.0,
+            "ticket_id": 102,
+            "ticket_resolved": false
+          }
+        }
+      ],
+      "cash_change": -2400.0,
+      "model_usage": {
+        "requests": 19,
+        "input_tokens": 42482,
+        "output_tokens": 4013,
+        "tool_calls": 25
+      }
+    },
+    {
+      "ticket_id": 103,
+      "subject": "Bulk hoodie discount",
+      "requester": "Yale AI Club",
+      "final_status": "resolved",
+      "run_id": "f861e4ac2a39",
+      "outcome": "Ticket is waiting on a human. Approve or decline a bulk discount before we quote one, and confirm how to handle the 12-unit shortfall before promising the complete order or a date. Customer draft explains current stock and says the price request is under review.",
+      "finding": "Yale AI Club requested 20 CC-HOOD-NAVY hoodies, size M. Inventory reports 8 on hand, leaving 12 short. No restock date is confirmed; apparel reprints have a 5-day lead time. List price is $58 per hoodie and unit cost is $22. No discount is approved.",
+      "customer_message_draft": "Hi Yale AI Club, thanks for asking about 20 navy hoodies in size M. We currently have 8 in that size, so we can’t fill all 20 right now. Would you like to discuss taking the 8 available now, or wait while we restock? We’ll confirm a date once we can. Your bulk-price request is being reviewed by the shop; we can’t confirm a discount yet.",
+      "agents": {
+        "Boss": {
+          "summary": "Ticket 103 only was handled. It is waiting on human decisions about the discount and the unconfirmed 12-unit shortfall. No payment or purchase approval is requested.",
+          "tools": {
+            "get_shop_date": 1,
+            "list_open_tickets": 1,
+            "get_ticket": 1,
+            "set_ticket_status": 1,
+            "add_ticket_note": 1
+          },
+          "asked": [
+            "Inventory",
+            "CustomerService"
+          ],
+          "asked_by": [],
+          "notes_written": 1
+        },
+        "Inventory": {
+          "summary": "CC-HOOD-NAVY size M has 8 on shelf against 20 requested, so 12 are short; the on-shelf quantity is in Aisle A. Ticket 103 has no linked restock invoice, so restock status and an ETA cannot be confirmed; Bulldog Print Co is listed for apparel reprints with a 5-day lead time, but that does not confirm an order or availability. No date is promised.",
+          "tools": {
+            "get_ticket": 2,
+            "check_stock": 2,
+            "list_stock_by_size": 2,
+            "get_shop_date": 1,
+            "list_vendors": 2
+          },
+          "asked": [
+            "Accounting"
+          ],
+          "asked_by": [
+            "Boss",
+            "CustomerService"
+          ],
+          "notes_written": 0
+        },
+        "CustomerService": {
+          "summary": "Yale AI Club requests 20 CC-HOOD-NAVY hoodies in size M and asks for a bulk discount. We have 8 in that size now, leaving 12 unavailable; the bulk price is not approved, and the shortfall has no confirmed restock date.",
+          "tools": {
+            "get_ticket": 1,
+            "check_stock": 1,
+            "get_pricing": 1
+          },
+          "asked": [
+            "Accounting",
+            "Inventory"
+          ],
+          "asked_by": [
+            "Boss"
+          ],
+          "notes_written": 0
+        },
+        "Accounting": {
+          "summary": "For CC-HOOD-NAVY, qty 20: list price is $58.00 per unit ($1,160.00 total) and unit cost is $22.00 ($440.00 total). No discount is proposed or processed.",
+          "tools": {
+            "get_shop_date": 2,
+            "get_pricing": 2
+          },
+          "asked": [],
+          "asked_by": [
+            "CustomerService",
+            "Inventory"
+          ],
+          "notes_written": 0
+        }
+      },
+      "delegations": [
+        {
+          "from": "Boss",
+          "to": "Inventory",
+          "task": "Ticket 103: Check CC-HOOD-NAVY, size M, qty 20. Report current shelf stock and restock/lead-time constraints, and the list price and unit cost if available. Do not promise or process a discount."
+        },
+        {
+          "from": "Boss",
+          "to": "CustomerService",
+          "task": "Ticket 103: Yale AI Club asks a bulk discount on 20 CC-HOOD-NAVY hoodies, size M. Assess the request and draft a customer reply that makes no discount promise; flag what human approval is needed."
+        },
+        {
+          "from": "CustomerService",
+          "to": "Accounting",
+          "task": "Ticket 103: Yale AI Club requests a bulk discount on 20 CC-HOOD-NAVY hoodies, size M. Assess affordable discount/margin and report any pricing limits; do not approve or promise a discount."
+        },
+        {
+          "from": "Inventory",
+          "to": "Accounting",
+          "task": "Ticket 103 / SKU CC-HOOD-NAVY size M qty 20: report list price and unit cost if available. Do not process or propose a discount."
+        },
+        {
+          "from": "CustomerService",
+          "to": "Inventory",
+          "task": "Ticket 103: Yale AI Club requests 20 CC-HOOD-NAVY hoodies, size M. Shelf stock is 8. Please report restock/availability details and any constraints on completing requested quantity; do not promise a date."
+        }
+      ],
+      "guardrail_stops": [],
+      "human_approvals": [
+        {
+          "kind": "discount",
+          "description": "Approve or decline a bulk discount before any discounted price is offered. No discount amount has been proposed or approved.",
+          "amount": null,
+          "decision": "declined",
+          "by": "Shop Owner",
+          "at": "2026-10-24T21:12:42+00:00",
+          "payment": null
+        },
+        {
+          "kind": "verify",
+          "description": "Confirm whether to proceed with the 12-unit size M shortfall and what availability/timing can be promised; there is no confirmed restock date.",
+          "amount": null,
+          "decision": "approved",
+          "by": "Shop Owner",
+          "at": "2026-10-24T21:12:44+00:00",
+          "payment": null
+        }
+      ],
+      "cash_change": 0,
+      "model_usage": {
+        "requests": 22,
+        "input_tokens": 48078,
+        "output_tokens": 5101,
+        "tool_calls": 26
+      }
+    }
+  ]
+}

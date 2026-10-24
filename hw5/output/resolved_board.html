@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Customs: Resolved Board</title>
+<style>
+  body { margin: 0; font: 15px/1.5 'Segoe UI', system-ui, sans-serif; color: #e3ece9; background: #060b0d; }
+  header { padding: 22px 32px; border-bottom: 1px solid rgba(54,211,192,.25); background: linear-gradient(180deg, #0b1a1c, #060b0d); }
+  h1 { margin: 0; font: 600 24px 'Palatino Linotype', Georgia, serif; color: #e8c15a; }
+  header p { margin: 4px 0 0; color: #8aa3a0; }
+  .sum { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 14px; }
+  .sum div { background: rgba(0,0,0,.35); border: 1px solid rgba(54,211,192,.25); border-radius: 10px; padding: 8px 14px; }
+  .sum b { display: block; font: 700 20px Georgia, serif; color: #d9ffe6; }
+  main { max-width: 1180px; margin: 0 auto; padding: 22px 32px 40px; display: grid; gap: 22px; }
+  .card { background: rgba(14,26,29,.9); border: 1px solid rgba(232,193,90,.4); border-radius: 14px; padding: 18px 20px; }
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .kicker { font-size: 12px; text-transform: uppercase; letter-spacing: 1.2px; color: #36d3c0; }
+  h2 { margin: 2px 0 12px; font: 600 22px 'Palatino Linotype', Georgia, serif; color: #e8c15a; }
+  .pill { background: #e8c15a; color: #2a1d02; font-weight: 700; padding: 3px 12px; border-radius: 99px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+  img { width: 100%; border-radius: 10px; border: 1px solid rgba(54,211,192,.3); display: block; }
+  .facts { display: grid; grid-template-columns: 2fr 1fr 1.4fr .8fr; gap: 12px; margin-top: 12px; font-size: 13.5px; }
+  .facts b { display: block; font-size: 11.5px; text-transform: uppercase; letter-spacing: .8px; color: #8aa3a0; margin-bottom: 2px; }
+  .facts ul { margin: 0; padding-left: 18px; }
+  .neg { color: #ff8c75; font: 700 18px Georgia, serif; }
+  @media (max-width: 900px) { .facts { grid-template-columns: 1fr 1fr; } }
+</style></head>
+<body>
+<header>
+  <h1>Campus Customs · Resolved Board</h1>
+  <p>Screenshots of the React dashboard (http://localhost:5173) after each ticket was resolved in the Problem 9 run. Click a screenshot to open it full size.</p>
+  <div class="sum">
+    <div>Starting checking<b>$3,400.00</b></div>
+    <div>Ending checking<b>$160.00</b></div>
+    <div>Matches database<b>yes ✓</b></div>
+    <div>Tickets resolved<b>3 / 3</b></div>
+  </div>
+</header>
+<main>
+  <section class="card">
+    <div class="head">
+      <div><div class="kicker">Ticket 101 · Bulldog tee · Tauhid Zaman</div><h2>The Missing Tee</h2></div>
+      <span class="pill">resolved</span>
+    </div>
+    <a href="screenshots/board-101-resolved-1.jpg" target="_blank"><img src="screenshots/board-101-resolved-1.jpg" alt="React board with ticket 101 resolved"></a>
+    <div class="facts">
+      <div><b>Outcome</b>Leave ticket waiting_on_human. Do not promise a ship date. After the invoice payment is approved, confirm restock timing and availability before updating the customer.</div>
+      <div><b>Agents</b>Boss, Inventory, Accounting, CustomerService</div>
+      <div><b>Human approvals</b><ul><li>payment $840.00: <b>approved</b> by Shop Owner</li><li>customer message: <b>approved</b> by Shop Owner</li></ul></div>
+      <div><b>Cash change</b><span class="neg">−$840.00</span></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="head">
+      <div><div class="kicker">Ticket 102 · Rent due · Elm City Properties</div><h2>The Landlord&#x27;s Letter</h2></div>
+      <span class="pill">resolved</span>
+    </div>
+    <a href="screenshots/board-102-resolved-1.jpg" target="_blank"><img src="screenshots/board-102-resolved-1.jpg" alt="React board with ticket 102 resolved"></a>
+    <div class="facts">
+      <div><b>Outcome</b>Ticket set to waiting_on_human. Request human approval for the $2,400 rent payment; no payment has been made.</div>
+      <div><b>Agents</b>Boss, Facilities, Accounting</div>
+      <div><b>Human approvals</b><ul><li>payment $2,400.00: <b>approved</b> by Shop Owner</li></ul></div>
+      <div><b>Cash change</b><span class="neg">−$2,400.00</span></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="head">
+      <div><div class="kicker">Ticket 103 · Bulk hoodie discount · Yale AI Club</div><h2>The Hoodie Hoard</h2></div>
+      <span class="pill">resolved</span>
+    </div>
+    <a href="screenshots/board-103-resolved-1.jpg" target="_blank"><img src="screenshots/board-103-resolved-1.jpg" alt="React board with ticket 103 resolved"></a>
+    <div class="facts">
+      <div><b>Outcome</b>Ticket is waiting on a human. Approve or decline a bulk discount before we quote one, and confirm how to handle the 12-unit shortfall before promising the complete order or a date. Customer draft explains current stock and says the price request is under review.</div>
+      <div><b>Agents</b>Boss, Inventory, CustomerService, Accounting</div>
+      <div><b>Human approvals</b><ul><li>discount: <b>declined</b> by Shop Owner</li><li>verify: <b>approved</b> by Shop Owner</li></ul></div>
+      <div><b>Cash change</b><span class="">$0.00</span></div>
+    </div>
+  </section>
+</main>
+</body></html>
